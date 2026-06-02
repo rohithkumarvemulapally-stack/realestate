@@ -2,31 +2,43 @@ import Link from "next/link";
 import { cn } from "@/lib/cn";
 
 /**
- * Brand mark — a stylised globe/meridian (longitude line), nodding to the
- * company name. Filled badge so it reads on both cream and navy backgrounds.
+ * Brand mark — a compass / meridian star (a nod to navigation and to the
+ * company name) inside a faint ring. Filled badge so it reads on both cream
+ * and navy backgrounds.
  */
 function MeridianMark({ variant }: { variant: "dark" | "light" }) {
+  const accent = variant === "light" ? "#FAF7F2" : "#C4A688";
   return (
     <span
       className={cn(
-        "relative flex h-9 w-9 items-center justify-center rounded-xl shadow-sm transition-transform duration-500 ease-smooth group-hover:-rotate-6",
-        variant === "light" ? "bg-brown-500" : "bg-blue-900",
+        "relative flex h-10 w-10 items-center justify-center rounded-xl shadow-sm ring-1 transition-transform duration-500 ease-smooth group-hover:rotate-[30deg]",
+        variant === "light"
+          ? "bg-brown-500 ring-white/10"
+          : "bg-blue-900 ring-blue-900/20",
       )}
     >
-      <svg
-        viewBox="0 0 24 24"
-        fill="none"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-        className={cn(
-          "h-5 w-5",
-          variant === "light" ? "stroke-cream" : "stroke-brown-300",
-        )}
-        aria-hidden
-      >
-        <circle cx="12" cy="12" r="8.5" />
-        <ellipse cx="12" cy="12" rx="3.6" ry="8.5" />
-        <line x1="3.5" y1="12" x2="20.5" y2="12" />
+      <svg viewBox="0 0 24 24" className="h-[22px] w-[22px]" aria-hidden>
+        <circle
+          cx="12"
+          cy="12"
+          r="9"
+          fill="none"
+          stroke={accent}
+          strokeWidth="0.9"
+          opacity="0.45"
+        />
+        {/* cardinal compass star */}
+        <path
+          d="M12 2.5 L13.5 10.5 L21.5 12 L13.5 13.5 L12 21.5 L10.5 13.5 L2.5 12 L10.5 10.5 Z"
+          fill={accent}
+        />
+        {/* diagonal accents */}
+        <path
+          d="M12 6.5 L12.7 11.3 L17.5 12 L12.7 12.7 L12 17.5 L11.3 12.7 L6.5 12 L11.3 11.3 Z"
+          fill={accent}
+          opacity="0.35"
+          transform="rotate(45 12 12)"
+        />
       </svg>
     </span>
   );

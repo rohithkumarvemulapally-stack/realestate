@@ -49,7 +49,7 @@ export default function Navbar() {
       <nav className="container-px flex h-20 items-center justify-between py-4">
         <Logo variant={overHero ? "light" : "dark"} />
 
-        <ul className="hidden items-center gap-1 lg:flex">
+        <ul className="hidden items-center gap-1 md:flex">
           {links.map((l) => {
             const active =
               l.href === pathname ||
@@ -88,7 +88,7 @@ export default function Navbar() {
           aria-expanded={open}
           onClick={() => setOpen((v) => !v)}
           className={cn(
-            "rounded-full p-2 transition-colors lg:hidden",
+            "rounded-full p-2 transition-colors md:hidden",
             overHero && !open ? "text-cream" : "text-blue-900",
           )}
         >
@@ -103,7 +103,7 @@ export default function Navbar() {
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            className="overflow-hidden border-t border-blue-900/10 bg-cream lg:hidden"
+            className="overflow-hidden border-t border-blue-900/10 bg-cream md:hidden"
           >
             <ul className="container-px flex flex-col gap-1 py-4">
               {links.map((l) => (

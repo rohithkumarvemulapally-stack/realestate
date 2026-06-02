@@ -35,7 +35,7 @@ export default function RootLayout({
           <CustomCursor />
           <Navbar />
           <PageTransition>
-            <main className="min-h-screen">{children}</main>
+            <main className="min-h-screen overflow-x-clip">{children}</main>
           </PageTransition>
           <Footer />
         </SmoothScroll>
