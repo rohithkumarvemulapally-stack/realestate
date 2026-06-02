@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ButtonLink } from "@/components/ui/Button";
+import { Logo } from "@/components/ui/Logo";
 import { cn } from "@/lib/cn";
 
 const links = [
@@ -32,34 +33,47 @@ export default function Navbar() {
     setOpen(false);
   }, [pathname]);
 
+  // The homepage hero is dark; the transparent nav sits over it until the
+  // user scrolls. Use a light treatment there so the brand stays legible.
+  const overHero = pathname === "/" && !scrolled;
+
   return (
     <header
       className={cn(
         "fixed inset-x-0 top-0 z-50 transition-all duration-500 ease-smooth",
         scrolled
-          ? "bg-cream/85 shadow-[0_1px_0_rgba(15,42,71,0.08)] backdrop-blur-md"
-          : "bg-transparent",
+          ? "border-b border-blue-900/10 bg-cream/80 shadow-[0_8px_30px_-18px_rgba(15,42,71,0.35)] backdrop-blur-xl"
+          : "border-b border-transparent bg-transparent",
       )}
     >
       <nav className="container-px flex h-20 items-center justify-between py-4">
-        <Link
-          href="/"
-          className="text-xl font-bold tracking-tightest text-blue-900"
-        >
-          Meridian<span className="text-brown-500">.</span>
-        </Link>
+        <Logo variant={overHero ? "light" : "dark"} />
 
-        <ul className="hidden items-center gap-8 lg:flex">
-          {links.map((l) => (
-            <li key={l.href}>
-              <Link
-                href={l.href}
-                className="link-underline text-sm font-medium text-ink/80 transition-colors hover:text-blue-900"
-              >
-                {l.label}
-              </Link>
-            </li>
-          ))}
+        <ul className="hidden items-center gap-1 lg:flex">
+          {links.map((l) => {
+            const active =
+              l.href === pathname ||
+              (l.href !== "/" && pathname.startsWith(l.href.split("#")[0]));
+            return (
+              <li key={l.href}>
+                <Link
+                  href={l.href}
+                  className={cn(
+                    "rounded-full px-4 py-2 text-sm font-medium transition-colors duration-300",
+                    overHero
+                      ? active
+                        ? "bg-cream/15 text-cream"
+                        : "text-cream/80 hover:bg-cream/10 hover:text-cream"
+                      : active
+                        ? "bg-blue-900/5 text-blue-900"
+                        : "text-ink/70 hover:bg-blue-900/5 hover:text-blue-900",
+                  )}
+                >
+                  {l.label}
+                </Link>
+              </li>
+            );
+          })}
         </ul>
 
         <div className="hidden lg:block">
@@ -73,7 +87,10 @@ export default function Navbar() {
           aria-label={open ? "Close menu" : "Open menu"}
           aria-expanded={open}
           onClick={() => setOpen((v) => !v)}
-          className="rounded-full p-2 text-blue-900 lg:hidden"
+          className={cn(
+            "rounded-full p-2 transition-colors lg:hidden",
+            overHero && !open ? "text-cream" : "text-blue-900",
+          )}
         >
           {open ? <X size={24} /> : <Menu size={24} />}
         </button>

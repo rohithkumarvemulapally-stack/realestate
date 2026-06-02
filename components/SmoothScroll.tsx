@@ -18,10 +18,13 @@ export default function SmoothScroll({
   useEffect(() => {
     if (reduce) return;
 
+    // `lerp` tracks the pointer/wheel input far more responsively than a
+    // fixed long `duration`, which is what made scrolling feel heavy/sluggish.
     const lenis = new Lenis({
-      duration: 1.1,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      lerp: 0.12,
+      wheelMultiplier: 1.1,
       smoothWheel: true,
+      touchMultiplier: 1.6,
     });
 
     let frame = 0;

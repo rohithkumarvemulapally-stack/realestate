@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ArrowUpRight, Instagram, Linkedin, Twitter } from "lucide-react";
+import { Logo } from "@/components/ui/Logo";
 
 const columns = [
   {
@@ -28,9 +29,7 @@ export default function Footer() {
       <div className="container-px py-16 lg:py-24">
         <div className="grid gap-12 lg:grid-cols-[1.5fr_1fr_1fr_1.2fr]">
           <div>
-            <Link href="/" className="text-2xl font-bold tracking-tightest">
-              Meridian<span className="text-brown-300">.</span>
-            </Link>
+            <Logo variant="light" />
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-cream/60">
               A modern estate practice for India&apos;s most considered buyers.
               Homes, land, and commercial — found with care.
