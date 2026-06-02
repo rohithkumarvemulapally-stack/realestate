@@ -1,11 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { Check, Loader2 } from "lucide-react";
+import { AlertCircle, Check, Loader2 } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Input, Label, Select, Textarea, FieldError } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import { allTypes } from "@/data/properties";
+import { submitInquiry } from "@/app/contact/actions";
 
 interface FormState {
   name: string;
@@ -44,9 +45,10 @@ function validate(values: FormState): Errors {
 export default function ContactForm() {
   const [values, setValues] = useState<FormState>(empty);
   const [errors, setErrors] = useState<Errors>({});
-  const [status, setStatus] = useState<"idle" | "submitting" | "success">(
-    "idle",
-  );
+  const [status, setStatus] = useState<
+    "idle" | "submitting" | "success" | "error"
+  >("idle");
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   function setField(field: keyof FormState, value: string) {
     setValues((prev) => ({ ...prev, [field]: value }));
@@ -55,19 +57,27 @@ export default function ContactForm() {
     }
   }
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const found = validate(values);
     setErrors(found);
     if (Object.keys(found).length > 0) return;
 
     setStatus("submitting");
-    // Simulate a network request — no real backend.
-    window.setTimeout(() => {
+    setSubmitError(null);
+
+    const result = await submitInquiry(values);
+
+    if (result.ok) {
       setStatus("success");
       setValues(empty);
-      window.setTimeout(() => setStatus("idle"), 4000);
-    }, 1100);
+      window.setTimeout(() => setStatus("idle"), 5000);
+    } else {
+      setStatus("error");
+      setSubmitError(
+        result.error ?? "Something went wrong. Please try again.",
+      );
+    }
   }
 
   return (
@@ -168,6 +178,23 @@ export default function ContactForm() {
               <Check size={16} />
             </span>
             Thank you — your enquiry is in. An agent will be in touch shortly.
+          </motion.div>
+        )}
+        {status === "error" && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 10 }}
+            role="alert"
+            className="flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 px-5 py-4 text-sm text-red-800"
+          >
+            <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-red-100">
+              <AlertCircle size={16} />
+            </span>
+            <span>
+              We couldn&apos;t send your enquiry. {submitError} Please try again
+              or email us directly.
+            </span>
           </motion.div>
         )}
       </AnimatePresence>
